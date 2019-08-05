@@ -107,7 +107,7 @@ class ExcelView extends View
         $content = $this->__output();
         $this->Blocks->set('content', $content);
 
-        $this->response->withDownload($this->getFilename());
+        $this->setResponse($this->response->withDownload($this->getFilename()));
 
         return $this->Blocks->get('content');
     }
