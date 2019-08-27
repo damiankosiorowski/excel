@@ -62,7 +62,7 @@ class ImportComponent extends Component
         $PhpExcelReader = IOFactory::createReader($fileType);
         $PhpExcelReader->setReadDataOnly(true);
 
-        if ($fileType !== 'CSV') {  // csv-files can have only one 'worksheet'
+        if (strtoupper($fileType) !== 'CSV') {  // csv-files can have only one 'worksheet'
             
             /** identify worksheets in file * */
             $worksheets = $PhpExcelReader->listWorksheetNames($file);
