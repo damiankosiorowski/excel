@@ -1,5 +1,5 @@
 {
-    "name": "Cewi/Excel",
+    "name": "cewi/excel",
     "description": "Excel plugin for CakePHP 3",
     "type": "cakephp-plugin",
     "keywords": [
