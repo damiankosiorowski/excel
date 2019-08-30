@@ -54,13 +54,15 @@ class ImportComponent extends Component
      */
     public function prepareEntityData($file = null, array $options = [])
     {
-
+        $encoding = $options['encoding'] ?? 'UTF-8';
+        
         /**  load and configure \PhpOffice\PhpSpreadsheet\SpreadsheetReader  * */
         Cell::setValueBinder(new AdvancedValueBinder());
         $fileType = IOFactory::identify($file);
 
         $PhpExcelReader = IOFactory::createReader($fileType);
         $PhpExcelReader->setReadDataOnly(true);
+        $PhpExcelReader->setInputEncoding($encoding);
 
         if (strtoupper($fileType) !== 'CSV') {  // csv-files can have only one 'worksheet'
             
