@@ -56,9 +56,10 @@ class ImportComponent extends Component
     {
         $encoding = $options['encoding'] ?? 'UTF-8';
         $delimiter = $options['delimiter'] ?? null;
+        $binder = $options['binder'] ?? new AdvancedValueBinder();
         
         /**  load and configure \PhpOffice\PhpSpreadsheet\SpreadsheetReader  * */
-        Cell::setValueBinder(new AdvancedValueBinder());
+        Cell::setValueBinder($binder);
         $fileType = IOFactory::identify($file);
 
         $PhpExcelReader = IOFactory::createReader($fileType);
