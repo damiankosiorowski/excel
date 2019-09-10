@@ -57,6 +57,7 @@ class ImportComponent extends Component
         $encoding = $options['encoding'] ?? 'UTF-8';
         $delimiter = $options['delimiter'] ?? null;
         $binder = $options['binder'] ?? new AdvancedValueBinder();
+        $readFilter = $options['filter'] ?? false;
         
         /**  load and configure \PhpOffice\PhpSpreadsheet\SpreadsheetReader  * */
         Cell::setValueBinder($binder);
@@ -66,6 +67,10 @@ class ImportComponent extends Component
         $PhpExcelReader->setReadDataOnly(true);
         $PhpExcelReader->setInputEncoding($encoding);
         $PhpExcelReader->setDelimiter($delimiter);
+        
+        if($readFilter) {
+            $PhpExcelReader->setReadFilter($readFilter);
+        }
 
         if (strtoupper($fileType) !== 'CSV') {  // csv-files can have only one 'worksheet'
             
