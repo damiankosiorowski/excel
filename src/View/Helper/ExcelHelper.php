@@ -15,6 +15,7 @@ use Cake\ORM\ResultSet;
 use Cake\View\Helper;
 use Cake\View\View;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\RichText\RichText;
 
 /*
  * The MIT License
@@ -214,6 +215,11 @@ class ExcelHelper extends Helper
         if ($cell instanceof QueryExpression) {
             $cell = null; //TODO find a way to get the Values and insert them into the Sheet
 
+            return;
+        }
+        if ($cell instanceof RichText) {
+            $this->_View->PHPSpreadsheet->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValueExplicit($cell, DataType::TYPE_INLINE);
+            
             return;
         }
         if (is_string($cell)) {
