@@ -85,21 +85,21 @@ class ExcelHelper extends Helper
      * @param string $name
      * @return void
      */
-    public function addWorksheet($data = null, $name = '')
+    public function addWorksheet($data = null, $name = '', $asRichText = false)
     {
         // Add empty sheet to Workbook
         $this->addSheet($name);
 
         if (is_array($data)) {
-            $data = $this->prepareCollectionData(collection($data));
+            $data = $this->prepareCollectionData(collection($data), $asRichText);
         } elseif ($data instanceof Entity) {
-            $data = $this->prepareEntityData($data);
+            $data = $this->prepareEntityData($data, $asRichText);
         } elseif ($data instanceof Query) {
-            $data = $this->prepareCollectionData(collection($data->toArray()));
+            $data = $this->prepareCollectionData(collection($data->toArray()), $asRichText);
         } elseif ($data instanceof ResultSet) {
-            $data = $this->prepareCollectionData(collection($data->toArray()));
+            $data = $this->prepareCollectionData(collection($data->toArray()), $asRichText);
         } else {
-            $data = $this->prepareCollectionData($data);
+            $data = $this->prepareCollectionData($data, $asRichText);
         }
         // Add the Data
         $this->addData($data);
@@ -120,14 +120,25 @@ class ExcelHelper extends Helper
      * @param mixed $collection \Cake\Collection\Collection | \Cake\ORM\Query
      * @return array
      */
-    public function prepareCollectionData(Collection $collection = null)
+    public function prepareCollectionData(Collection $collection = null, $asRichText = false)
     {
         /* Extract keys from first item */
         $first = $collection->first();
         if (is_array($first)) {
-            $data = [array_keys($first)];
+            if($asRichText) {
+                $data = [$first['labels'] ?? []];
+                unset($first['labels']);
+            }
+            else {
+                $data = [array_keys($first)];
+            }
         } else {
-            $data = [array_keys($first->toArray())];
+            if($asRichText) {
+                throw new \Exception('Bad parameter asRichText TRUE');
+            }
+            else {
+                $data = [array_keys($first->toArray())];
+            }
         }
 
         /* Add data */
@@ -219,6 +230,7 @@ class ExcelHelper extends Helper
         }
         if ($cell instanceof RichText) {
             $this->_View->PHPSpreadsheet->getActiveSheet()->getCellByColumnAndRow($columnIndex, $rowIndex)->setValueExplicit($cell, DataType::TYPE_INLINE);
+            $this->_View->PHPSpreadsheet->getActiveSheet()->getRowDimension($rowIndex)->setRowHeight($cell->getRichTextElements()[0]->getFont()->getSize()*1.5);
             
             return;
         }
