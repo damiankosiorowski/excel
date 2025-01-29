@@ -65,8 +65,6 @@ class ImportComponent extends Component
 
         $PhpExcelReader = IOFactory::createReader($fileType);
         $PhpExcelReader->setReadDataOnly(true);
-        $PhpExcelReader->setInputEncoding($encoding);
-        $PhpExcelReader->setDelimiter($delimiter);
         
         if($readFilter) {
             $PhpExcelReader->setReadFilter($readFilter);
@@ -94,6 +92,10 @@ class ImportComponent extends Component
 
             /** load the sheet and convert data to an array */
             $PhpExcelReader->setLoadSheetsOnly($worksheetToLoad);
+        }
+        else {
+            $PhpExcelReader->setInputEncoding($encoding);
+            $PhpExcelReader->setDelimiter($delimiter);
         }
 
         $PhpExcel = $PhpExcelReader->load($file);
